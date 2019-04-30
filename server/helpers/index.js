@@ -1,5 +1,14 @@
 const moment = require('moment');
 
+function generate_url(owner, repo, page) {
+    return `https://api.github.com/repos/${owner}/${repo}/issues?per_page=100&page=${page}`;
+}
+
+function validate(query) {
+    if (!query.hasOwnProperty('repository')) return false;
+    return true;
+}
+
 function filter_issues(data) {
     return data.filter(function (row) {
         return !row.hasOwnProperty('pull_request')
@@ -37,5 +46,7 @@ function aggregate(data) {
 
 module.exports = {
     aggregate,
-    filter_issues
+    filter_issues,
+    generate_url,
+    validate
 }
