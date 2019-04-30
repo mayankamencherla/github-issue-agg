@@ -30,6 +30,7 @@ app.use(limiter);
 
 // We ensure that every request is a json, as this is a JSON API
 app.use(bodyParser.json());
+app.use('/public', express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.use((req, res, next) => {

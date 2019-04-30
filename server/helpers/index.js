@@ -5,8 +5,27 @@ function generate_url(owner, repo, page) {
 }
 
 function validate(query) {
-    if (!query.hasOwnProperty('repository')) return false;
-    return true;
+    if (!query.hasOwnProperty('repository')) {
+        return {
+            result: false,
+            message: "repository needs to be sent in the url request"
+        }
+    }
+
+    const url = query.repository;
+    if (url.substring(0, 8) != 'https://') {
+        return {
+            result: false,
+            message: "The url must secured via https"
+        }
+    } else if (!url.includes('github.com')) {
+        return {
+            result: false,
+            message: "The url needs to be a Github URL"
+        }
+    }
+
+    return {result: true};
 }
 
 function filter_issues(data) {

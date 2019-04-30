@@ -6,19 +6,21 @@ module.exports.controller = (app) => {
     /**
      * Retrieves an entity based on input parameters
      */
-    app.get('/query', async (req, res, next) => {
-        if (!validate(req.query)) {
-            res.json({
-                "Success": false,
-                "message": "repository needs to be sent in the url request"
-            });
+    app.post('/query', async (req, res, next) => {
+        const v = validate(req.body);
 
-            return;
+        if (!v.result) {
+            return res.json({
+                "Success": false,
+                "message": v.message
+            });
         }
 
-        console.log(`Request to retrieve ${req.query.repository}`);
+        const url = req.body.repository;
 
-        var array = req.query.repository.split('/');
+        console.log(`Request to retrieve ${url}`);
+
+        var array = url.split('/');
         const owner = array[3];
         const repo = array[4];
 
