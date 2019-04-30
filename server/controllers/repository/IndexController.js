@@ -26,8 +26,9 @@ module.exports.controller = (app) => {
         while (true) {
             const url = `https://api.github.com/repos/${array[3]}/${array[4]}/issues?per_page=100&page=${index}`;
 
+            let result;
             try {
-                const result = await axios.get(url);
+                result = await axios.get(url);
             } catch (e) {
                 console.log(e);
                 return res.json({"Success": false, "message": "Unable to retrieve data"});
