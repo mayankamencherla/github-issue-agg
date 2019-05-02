@@ -1,4 +1,5 @@
 const axios = require('axios');
+const Parallel = require("async-parallel");
 const {aggregate, filter_issues, generate_url, validate} = require('../../helpers');
 
 module.exports.controller = (app) => {
@@ -28,21 +29,31 @@ module.exports.controller = (app) => {
         var page = 1;
 
         while (true) {
-            const url = generate_url(owner, repo, page);
+            const urls = [
+                generate_url(owner, repo, page++),
+                generate_url(owner, repo, page++),
+                generate_url(owner, repo, page++),
+                generate_url(owner, repo, page),
+            ];
 
-            let result;
+            console.log(urls);
+
+            const subIssues = [];
+
             try {
-                result = await axios.get(url);
+                await Parallel.each(urls, function(url) {
+                    return axios.get(url).then(function(result) {
+                        subIssues.push(...filter_issues(result.data));
+                    });
+                });
             } catch (e) {
                 console.log(e);
                 return res.json({"Success": false, "message": "Unable to retrieve data"});
             }
 
-            console.log(`Pulled out ${result.data.length} on page ${page}`);
+            if (subIssues.length == 0) break;
 
-            if (result.data.length == 0) break;
-
-            issues.push(...filter_issues(result.data));
+            issues.push(...subIssues);
 
             console.log(`Pulled out a total of ${issues.length} after page ${page}`);
             page++;
