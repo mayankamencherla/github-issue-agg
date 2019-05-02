@@ -10,7 +10,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "@babel/register": "^7.4.4",
+    "async-parallel": "^1.2.3",
     "axios": "^0.18.0",
+    "babel": "^6.23.0",
     "body-parser": "^1.18.3",
     "dotenv": "^7.0.0",
     "escape-json-node": "^2.0.0",
